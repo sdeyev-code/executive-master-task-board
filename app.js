@@ -43,6 +43,11 @@ function render(){
 function resetForm(){$("taskForm").reset();$("editTaskIdOriginal").value="";$("deleteTaskBtn").classList.add("hidden");$("dialogTitle").textContent="משימה חדשה"}
 function openNew(){resetForm();$("taskPriority").value="בינונית";$("taskStatus").value="חדש";$("taskDialog").showModal()}
 window.openEdit=id=>{const t=tasks.find(x=>x.id===id);if(!t)return;resetForm();$("dialogTitle").textContent="עריכת "+t.id;$("editTaskIdOriginal").value=t.id;$("taskId").value=t.id;$("taskDomain").value=t.domain;$("taskTitle").value=t.title;$("taskPriority").value=t.priority;$("taskStatus").value=t.status;$("taskOwner").value=t.owner||"";$("taskFollowup").value=t.nextFollowUp||"";$("taskNextAction").value=t.nextAction||"";$("taskBlocker").value=t.blocker||"";$("taskNotes").value=t.notes||"";$("deleteTaskBtn").classList.remove("hidden");$("taskDialog").showModal()}
+
+$("dialogCloseBtn").onclick=()=>{$("taskDialog").close();resetForm()};
+$("dialogCancelBtn").onclick=()=>{$("taskDialog").close();resetForm()};
+$("taskDialog").addEventListener("cancel",e=>{e.preventDefault();$("taskDialog").close();resetForm()});
+
 document.querySelectorAll(".nav-item").forEach(b=>b.onclick=()=>go(b.dataset.view));
 $("newTaskBtn").onclick=openNew;
 ["searchInput","statusFilter","priorityFilter","sheetIdInput"].forEach(id=>$(id).oninput=render);
