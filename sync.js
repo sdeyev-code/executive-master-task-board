@@ -1,4 +1,4 @@
-const GOOGLE_CLIENT_ID='241983913188-o679465gj48clfjvnheepelf2s8083he.apps.googleusercontent.com';
+const GOOGLE_CLIENT_ID='241983913188-hn0dpna5blesr57fr5c6er306jjlj09h.apps.googleusercontent.com';
 const SHEETS_SCOPE='https://www.googleapis.com/auth/spreadsheets';
 const SHEET_HEADERS=['id','title','domain','priority','status','owner','deadline','createdAt','lastUpdated','nextFollowUp','followUpType','reminderSent','blocker','nextAction','notes','agentPriority','agentReason','agentNextAction','agentReviewedAt'];
 const DELETED_STORAGE='executiveMasterTasks.deleted.v1';
