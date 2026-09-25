@@ -104,6 +104,7 @@ async function refreshOrKpis(){
   }
   const days=[...byDate.entries()].sort((a,b)=>parseDMY(a[0])-parseDMY(b[0])).map(([d,rs])=>dayMetrics(d,rs));
   renderOrKpis(days);
+  localStorage.setItem('executiveMasterTasks.orKpiCache',JSON.stringify(days.slice(-10)));
   localStorage.setItem('executiveMasterTasks.lastOrKpiRefresh',new Date().toISOString())
  }catch(e){console.error(e);status.textContent='OR Control · טעינת המדדים נכשלה: '+String(e?.message||e)}
  finally{if(btn)btn.disabled=false}
@@ -127,9 +128,10 @@ function installDirtyTracking(){
  document.getElementById('deleteTaskBtn').onclick=()=>{const id=document.getElementById('editTaskIdOriginal').value;if(id&&confirm('למחוק את '+id+'?')){const d=deletedIds();d.add(id);saveDeleted(d);tasks=tasks.filter(t=>t.id!==id);persistLocal();document.getElementById('taskDialog').close()}}
 }
 function showLastSync(){const x=localStorage.getItem('executiveMasterTasks.lastSync');if(x)syncStatus('סנכרון אחרון: '+new Date(x).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'}))}
+function loadCachedOrKpis(){try{const x=JSON.parse(localStorage.getItem('executiveMasterTasks.orKpiCache')||'[]');if(Array.isArray(x)&&x.length){renderOrKpis(x);const t=localStorage.getItem('executiveMasterTasks.lastOrKpiRefresh');if(t)document.getElementById('orKpiStatus').textContent+=' · מטמון '+new Date(t).toLocaleString('he-IL',{dateStyle:'short',timeStyle:'short'})}}catch{}}
 function startOrKpiAutoRefresh(){if(orKpiTimer)clearInterval(orKpiTimer);orKpiTimer=setInterval(()=>{if(googleAccessToken&&Date.now()<googleTokenExpiresAt-60000)refreshOrKpis()},5*60*1000)}
 window.addEventListener('load',()=>{
- initGoogleClient();installDirtyTracking();showLastSync();
+ initGoogleClient();installDirtyTracking();showLastSync();loadCachedOrKpis();
  document.getElementById('googleConnectBtn').onclick=async()=>{try{await ensureGoogleToken();await syncNow();startOrKpiAutoRefresh()}catch(e){syncStatus('התחברות נכשלה: '+e.message,'error')}};
  document.getElementById('syncNowBtn').onclick=async()=>{await syncNow();startOrKpiAutoRefresh()};
  document.getElementById('googleDisconnectBtn').onclick=disconnectGoogle;
